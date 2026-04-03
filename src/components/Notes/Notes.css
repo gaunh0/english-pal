@@ -1,0 +1,93 @@
+.notes-manager {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── Note Card ─────────────────────────────────────────────────────────────── */
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.note-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition);
+}
+.note-card:hover { box-shadow: var(--shadow-md); }
+.note-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.note-card-term {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+.note-card-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.note-card-definition {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+.note-card-example,
+.note-card-personal {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+  border-left: 3px solid var(--border);
+  padding-left: 8px;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+.note-card-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ── Note Form ─────────────────────────────────────────────────────────────── */
+.note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.note-form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.notes-search {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 640px) {
+  .notes-manager { padding: 12px; }
+}

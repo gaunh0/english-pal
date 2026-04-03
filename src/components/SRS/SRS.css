@@ -1,0 +1,159 @@
+.srs-view {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.srs-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.srs-stat-card {
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.srs-stat-card .value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.srs-stat-card .label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.srs-stat-new      { border-top: 4px solid var(--secondary); }
+.srs-stat-due      { border-top: 4px solid var(--accent); }
+.srs-stat-learning { border-top: 4px solid var(--warning); }
+.srs-stat-mastered { border-top: 4px solid var(--success); }
+.srs-stat-new .value      { color: var(--secondary); }
+.srs-stat-due .value      { color: var(--accent); }
+.srs-stat-learning .value { color: var(--warning); }
+.srs-stat-mastered .value { color: var(--success); }
+
+/* ── Review Session ────────────────────────────────────────────────────────── */
+.srs-session-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.srs-session-word {
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.srs-session-meaning {
+  font-size: 18px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.srs-session-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── Mastery Progress ──────────────────────────────────────────────────────── */
+.srs-mastery {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+.srs-mastery h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.srs-mastery-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+.srs-mastery-label {
+  width: 90px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.srs-mastery-count {
+  width: 40px;
+  text-align: right;
+  font-weight: 700;
+}
+
+/* ── Schedule ──────────────────────────────────────────────────────────────── */
+.srs-schedule {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+.srs-schedule h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+.schedule-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.schedule-day-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.schedule-day-bar-wrap {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.schedule-day-bar {
+  width: 70%;
+  min-height: 4px;
+  background: var(--primary);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  opacity: 0.8;
+  transition: height 0.4s ease;
+}
+.schedule-day-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+}
+.schedule-day.today .schedule-day-label { color: var(--primary); }
+.schedule-day.today .schedule-day-bar { background: var(--accent); opacity: 1; }
+
+@media (max-width: 640px) {
+  .srs-view { padding: 12px; }
+  .srs-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .schedule-grid { gap: 4px; }
+  .schedule-day-bar-wrap { height: 60px; }
+}
