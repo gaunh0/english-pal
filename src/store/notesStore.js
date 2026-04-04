@@ -4,6 +4,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { v4 as uuidv4 } from 'uuid'
+import { supabaseStorage } from '../lib/supabaseStorage'
 
 export const useNotesStore = create(
   persist(
@@ -68,6 +69,7 @@ export const useNotesStore = create(
     }),
     {
       name: 'eng-notes-store',
+      storage: supabaseStorage,
       version: 1,
     }
   )

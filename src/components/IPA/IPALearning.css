@@ -1,0 +1,162 @@
+.ipa-learning {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── Mode toggle ───────────────────────────────────────────────────────────── */
+.ipa-mode-toggle {
+  display: flex;
+  gap: 6px;
+}
+
+/* ── Browse tabs ───────────────────────────────────────────────────────────── */
+.ipa-browse-tabs {
+  margin-bottom: 20px;
+}
+
+/* ── Symbol grid ───────────────────────────────────────────────────────────── */
+.ipa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  animation: fadeIn 0.2s ease;
+}
+
+/* ── Symbol card ───────────────────────────────────────────────────────────── */
+.ipa-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+.ipa-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--gray-300);
+}
+[data-theme="dark"] .ipa-card:hover { border-color: var(--gray-600); }
+
+.ipa-card--learned {
+  border-color: var(--success);
+  background: var(--bg-card);
+}
+[data-theme="dark"] .ipa-card--learned { border-color: var(--success); }
+
+.ipa-symbol {
+  font-size: 28px;
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.ipa-description {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.ipa-example-word {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.ipa-phonetic {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.ipa-card-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+/* ── Practice ──────────────────────────────────────────────────────────────── */
+.ipa-practice {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ipa-practice-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ipa-practice-progress {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ── Flashcard ─────────────────────────────────────────────────────────────── */
+.ipa-flashcard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  box-shadow: var(--shadow-md);
+  animation: fadeIn 0.2s ease;
+  min-height: 280px;
+}
+
+.ipa-flashcard-symbol {
+  font-size: 64px;
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.ipa-flashcard-reveal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 0.2s ease;
+  text-align: center;
+}
+
+.ipa-flashcard-description {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.ipa-flashcard-example {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+}
+
+.ipa-flashcard-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .ipa-learning { padding: 12px; }
+  .ipa-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .ipa-flashcard { padding: 32px 16px; }
+  .ipa-flashcard-symbol { font-size: 48px; }
+}

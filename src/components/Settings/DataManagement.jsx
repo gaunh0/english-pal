@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { storage } from '../../utils/storage'
 import { useToast } from '../Common/Toast'
 import './Settings.css'
@@ -7,10 +7,15 @@ import './Settings.css'
 export default function DataManagement() {
   const { showToast, Toasts } = useToast()
   const importRef = useRef(null)
+  const [sizeKB, setSizeKB] = useState(0)
 
-  const handleExport = () => {
+  useEffect(() => {
+    storage.getSize().then(setSizeKB)
+  }, [])
+
+  const handleExport = async () => {
     try {
-      const json = storage.exportAll()
+      const json = await storage.exportAll()
       const blob = new Blob([json], { type: 'application/json' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -28,8 +33,8 @@ export default function DataManagement() {
     const file = e.target.files[0]
     if (!file) return
     const reader = new FileReader()
-    reader.onload = (ev) => {
-      const result = storage.importAll(ev.target.result)
+    reader.onload = async (ev) => {
+      const result = await storage.importAll(ev.target.result)
       if (result.success) {
         showToast('Data imported! Reloading…', 'success')
         setTimeout(() => window.location.reload(), 1200)
@@ -41,17 +46,15 @@ export default function DataManagement() {
     e.target.value = '' // reset input
   }
 
-  const handleReset = () => {
+  const handleReset = async () => {
     if (window.confirm('Reset ALL data? This cannot be undone.')) {
       if (window.confirm('Are you absolutely sure? All vocabulary progress, notes, and settings will be lost.')) {
-        storage.clear()
+        await storage.clear()
         showToast('All data cleared. Reloading…', 'info')
         setTimeout(() => window.location.reload(), 1200)
       }
     }
   }
-
-  const sizeKB = storage.getSize()
 
   return (
     <>

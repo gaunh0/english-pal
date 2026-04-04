@@ -10,6 +10,7 @@ const TABS = [
   { id: 'questions',    label: 'Interview',    icon: '💬' },
   { id: 'progress',     label: 'Progress',     icon: '📊' },
   { id: 'settings',     label: 'Settings',     icon: '⚙️' },
+  { id: 'ipa',          label: 'IPA',          icon: '🔤' },
 ]
 
 /**

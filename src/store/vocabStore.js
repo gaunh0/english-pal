@@ -1,38 +1,50 @@
-/**
- * @fileoverview Zustand store for vocabulary data with SRS state and favorites.
- */
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { VOCABULARY } from '../utils/constants'
+import { supabase } from '../lib/supabase'
+import { supabaseStorage } from '../lib/supabaseStorage'
 
 export const useVocabStore = create(
   persist(
     (set, get) => ({
-      /** @type {Array} Full vocabulary list with SRS fields */
-      vocabulary: VOCABULARY.map(w => ({ ...w, easeFactor: 2.5 })),
-
-      /** @type {number[]} Array of favorite vocabulary IDs */
+      vocabulary: [],
       favorites: [],
+      srsProgress: {},
+      loading: true,
+      error: null,
 
-      // ── Actions ────────────────────────────────────────────────────────────
-
-      /**
-       * Update SRS fields for a single vocabulary item.
-       * @param {number} id
-       * @param {{ interval, repetitions, easeFactor, nextReview }} srsUpdate
-       */
-      updateSRS(id, srsUpdate) {
-        set(state => ({
-          vocabulary: state.vocabulary.map(w =>
-            w.id === id ? { ...w, ...srsUpdate } : w
-          ),
+      async fetchVocabulary() {
+        set({ loading: true, error: null })
+        const { data, error } = await supabase.from('vocabulary').select('*').order('id')
+        if (error || !data?.length) {
+          set({ loading: false, error: error?.message ?? 'Failed to load vocabulary' })
+          return
+        }
+        const progress = get().srsProgress
+        const merged = data.map(w => ({
+          easeFactor: 2.5,
+          interval: 1,
+          nextReview: Date.now(),
+          repetitions: 0,
+          practiceCount: 0,
+          ...(progress[w.id] ?? {}),
+          ...w,
         }))
+        set({ vocabulary: merged, loading: false })
       },
 
-      /**
-       * Toggle a word in the favorites list.
-       * @param {number} id
-       */
+      updateSRS(id, srsUpdate) {
+        set(state => {
+          const newProgress = {
+            ...state.srsProgress,
+            [id]: { ...(state.srsProgress[id] ?? {}), ...srsUpdate },
+          }
+          const newVocabulary = state.vocabulary.map(w =>
+            w.id === id ? { ...w, ...srsUpdate } : w
+          )
+          return { srsProgress: newProgress, vocabulary: newVocabulary }
+        })
+      },
+
       toggleFavorite(id) {
         set(state => ({
           favorites: state.favorites.includes(id)
@@ -41,23 +53,21 @@ export const useVocabStore = create(
         }))
       },
 
-      /**
-       * Increment the practice count for a word.
-       * @param {number} id
-       */
       incrementPractice(id) {
-        set(state => ({
-          vocabulary: state.vocabulary.map(w =>
-            w.id === id ? { ...w, practiceCount: (w.practiceCount || 0) + 1 } : w
-          ),
-        }))
+        set(state => {
+          const current = state.srsProgress[id] ?? {}
+          const newCount = (current.practiceCount ?? 0) + 1
+          const newProgress = {
+            ...state.srsProgress,
+            [id]: { ...current, practiceCount: newCount },
+          }
+          const newVocabulary = state.vocabulary.map(w =>
+            w.id === id ? { ...w, practiceCount: newCount } : w
+          )
+          return { srsProgress: newProgress, vocabulary: newVocabulary }
+        })
       },
 
-      /**
-       * Update arbitrary fields on a vocabulary item.
-       * @param {number} id
-       * @param {object} updates
-       */
       updateVocab(id, updates) {
         set(state => ({
           vocabulary: state.vocabulary.map(w =>
@@ -66,38 +76,33 @@ export const useVocabStore = create(
         }))
       },
 
-      /**
-       * Reset all SRS progress for all vocabulary items.
-       */
       resetProgress() {
-        set({
-          vocabulary: VOCABULARY.map(w => ({
+        set(state => {
+          const merged = state.vocabulary.map(w => ({
             ...w,
             easeFactor: 2.5,
             interval: 1,
             nextReview: Date.now(),
             repetitions: 0,
             practiceCount: 0,
-          })),
-          favorites: [],
+          }))
+          return { srsProgress: {}, vocabulary: merged, favorites: [] }
         })
       },
 
-      // ── Selectors ──────────────────────────────────────────────────────────
-
-      /** Get a single word by id. */
       getWord(id) {
         return get().vocabulary.find(w => w.id === id)
       },
 
-      /** Check if a word is in favorites. */
       isFavorite(id) {
         return get().favorites.includes(id)
       },
     }),
     {
       name: 'eng-vocab-store',
+      storage: supabaseStorage,
       version: 1,
+      partialize: state => ({ favorites: state.favorites, srsProgress: state.srsProgress }),
     }
   )
 )

@@ -3,6 +3,7 @@
  */
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { supabaseStorage } from '../lib/supabaseStorage'
 
 /** Format a Date as YYYY-MM-DD */
 function toDateKey(date = new Date()) {
@@ -100,6 +101,7 @@ export const useSettingsStore = create(
     }),
     {
       name: 'eng-settings-store',
+      storage: supabaseStorage,
       version: 1,
     }
   )

@@ -1,103 +1,67 @@
 /**
- * @fileoverview localStorage helper utilities with error handling and export/import support.
+ * @fileoverview Supabase-backed storage utilities with export/import support.
  */
 
+import { supabase } from '../lib/supabase'
 import { STORAGE_KEYS } from './constants'
 
-const MAX_SIZE_BYTES = 5 * 1024 * 1024 // 5MB warning threshold
+const STORE_KEYS = Object.values(STORAGE_KEYS)
 
-/** Safe localStorage wrapper */
+/** Map from Supabase key → store name (e.g. 'eng-vocab-store' → 'VOCAB') */
+const keyToName = Object.fromEntries(
+  Object.entries(STORAGE_KEYS).map(([name, key]) => [key, name])
+)
+
 export const storage = {
   /**
-   * Get a value from localStorage, returning defaultValue on error.
-   * @param {string} key
-   * @param {*} defaultValue
-   * @returns {*}
-   */
-  get(key, defaultValue = null) {
-    try {
-      const item = localStorage.getItem(key)
-      return item ? JSON.parse(item) : defaultValue
-    } catch {
-      return defaultValue
-    }
-  },
-
-  /**
-   * Set a value in localStorage, handling quota exceeded errors.
-   * @param {string} key
-   * @param {*} value
-   * @returns {boolean} Whether the operation succeeded
-   */
-  set(key, value) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value))
-      return true
-    } catch (e) {
-      if (e.name === 'QuotaExceededError') {
-        console.warn('localStorage quota exceeded. Consider exporting and clearing data.')
-      } else {
-        console.error('localStorage.set error:', e)
-      }
-      return false
-    }
-  },
-
-  /**
-   * Remove a key from localStorage.
-   * @param {string} key
-   */
-  remove(key) {
-    try {
-      localStorage.removeItem(key)
-    } catch (e) {
-      console.error('localStorage.remove error:', e)
-    }
-  },
-
-  /**
-   * Clear all app-related keys from localStorage.
-   */
-  clear() {
-    try {
-      Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key))
-    } catch (e) {
-      console.error('localStorage.clear error:', e)
-    }
-  },
-
-  /**
    * Export all app data as a JSON string for backup.
-   * @returns {string} JSON string of all app stores
+   * @returns {Promise<string>}
    */
-  exportAll() {
-    const data = {
-      exportedAt: new Date().toISOString(),
-      version: '1.0',
-      stores: {},
-    }
-    Object.entries(STORAGE_KEYS).forEach(([name, key]) => {
-      data.stores[name] = this.get(key)
+  async exportAll() {
+    const { data } = await supabase
+      .from('app_storage')
+      .select('key, value')
+      .in('key', STORE_KEYS)
+
+    const stores = {}
+    data?.forEach(row => {
+      stores[keyToName[row.key]] = row.value
     })
-    return JSON.stringify(data, null, 2)
+
+    return JSON.stringify(
+      { exportedAt: new Date().toISOString(), version: '1.0', stores },
+      null,
+      2
+    )
   },
 
   /**
    * Import data from a JSON backup string.
-   * @param {string} jsonString - Previously exported JSON string
-   * @returns {{ success: boolean, error?: string }}
+   * @param {string} jsonString
+   * @returns {Promise<{ success: boolean, error?: string }>}
    */
-  importAll(jsonString) {
+  async importAll(jsonString) {
     try {
       const data = JSON.parse(jsonString)
       if (!data.stores) {
         return { success: false, error: 'Invalid backup format: missing stores object.' }
       }
-      Object.entries(STORAGE_KEYS).forEach(([name, key]) => {
-        if (data.stores[name] !== undefined) {
-          this.set(key, data.stores[name])
-        }
-      })
+
+      const rows = Object.entries(STORAGE_KEYS)
+        .filter(([name]) => data.stores[name] !== undefined)
+        .map(([name, key]) => ({
+          key,
+          value: data.stores[name],
+          updated_at: new Date().toISOString(),
+        }))
+
+      if (rows.length > 0) {
+        const { error } = await supabase
+          .from('app_storage')
+          .upsert(rows, { onConflict: 'key' })
+        if (error) return { success: false, error: error.message }
+      }
+
       return { success: true }
     } catch (e) {
       return { success: false, error: `Failed to parse backup: ${e.message}` }
@@ -105,28 +69,24 @@ export const storage = {
   },
 
   /**
-   * Get estimated total localStorage usage in KB.
-   * @returns {number}
+   * Delete all app-related rows from Supabase.
+   * @returns {Promise<void>}
    */
-  getSize() {
-    try {
-      let total = 0
-      for (let key in localStorage) {
-        if (Object.prototype.hasOwnProperty.call(localStorage, key)) {
-          total += (localStorage[key].length + key.length) * 2
-        }
-      }
-      return Math.round(total / 1024)
-    } catch {
-      return 0
-    }
+  async clear() {
+    await supabase.from('app_storage').delete().in('key', STORE_KEYS)
   },
 
   /**
-   * Check if storage is near capacity (> 80% of 5MB).
-   * @returns {boolean}
+   * Get approximate storage size in KB from stored values.
+   * @returns {Promise<number>}
    */
-  isNearCapacity() {
-    return this.getSize() * 1024 > MAX_SIZE_BYTES * 0.8
+  async getSize() {
+    const { data } = await supabase
+      .from('app_storage')
+      .select('value')
+      .in('key', STORE_KEYS)
+
+    const total = data?.reduce((sum, row) => sum + (row.value?.length ?? 0), 0) ?? 0
+    return Math.round(total / 1024)
   },
 }
