@@ -5,7 +5,7 @@ import './Settings.css'
 
 /** App settings — dark mode, daily goal, voice, and data management. */
 export default function Settings() {
-  const { darkMode, toggleDarkMode, voiceEnabled, dailyGoal, updateSettings } = useSettingsStore()
+  const { darkMode, toggleDarkMode, voiceEnabled, dailyGoal, updateSettings, anthropicApiKey, setApiKey } = useSettingsStore()
 
   return (
     <div className="settings-view">
@@ -59,6 +59,25 @@ export default function Settings() {
               const val = parseInt(e.target.value, 10)
               if (val >= 1 && val <= 100) updateSettings({ dailyGoal: val })
             }}
+          />
+        </div>
+      </div>
+
+      {/* AI Integration */}
+      <div className="settings-section">
+        <h3>AI Integration</h3>
+        <div className="settings-row">
+          <div className="settings-row-info">
+            <div className="settings-row-label">Anthropic API Key</div>
+            <div className="settings-row-desc">Used for AI writing review in the Journal. Get yours at console.anthropic.com.</div>
+          </div>
+          <input
+            type="password"
+            className="input"
+            style={{ width: 220 }}
+            placeholder="sk-ant-..."
+            value={anthropicApiKey}
+            onChange={e => setApiKey(e.target.value)}
           />
         </div>
       </div>

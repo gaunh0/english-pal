@@ -17,6 +17,10 @@ export const useSettingsStore = create(
       darkMode: false,
       voiceEnabled: true,
       dailyGoal: 10,
+      anthropicApiKey: '',
+
+      // ── Immersion time tracking (seconds per skill) ─────────────────────────
+      immersionTime: { shadowing: 0, reading: 0, dictation: 0, journal: 0 },
 
       // ── Streak tracking ────────────────────────────────────────────────────
       studyStreak: 0,
@@ -86,6 +90,19 @@ export const useSettingsStore = create(
       /**
        * Reset all study stats and streak.
        */
+      setApiKey(key) {
+        set({ anthropicApiKey: key })
+      },
+
+      recordImmersionTime(skill, seconds) {
+        set(state => ({
+          immersionTime: {
+            ...state.immersionTime,
+            [skill]: (state.immersionTime[skill] || 0) + seconds,
+          },
+        }))
+      },
+
       resetStats() {
         set({
           studyStreak: 0,

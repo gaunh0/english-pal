@@ -68,6 +68,29 @@ export const useVocabStore = create(
         })
       },
 
+      async addVocabWord({ term, meaning, example }) {
+        const { data, error } = await supabase
+          .from('vocabulary')
+          .insert({ term, meaning: meaning || '', example: example || null, category: 'general' })
+          .select()
+          .single()
+        if (error || !data) return false
+        set(state => ({
+          vocabulary: [
+            ...state.vocabulary,
+            {
+              easeFactor: 2.5, interval: 1, nextReview: Date.now(),
+              repetitions: 0, practiceCount: 0, ...data,
+            },
+          ],
+        }))
+        return true
+      },
+
+      hasTerm(term) {
+        return get().vocabulary.some(w => w.term.toLowerCase() === term.toLowerCase())
+      },
+
       updateVocab(id, updates) {
         set(state => ({
           vocabulary: state.vocabulary.map(w =>

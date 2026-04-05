@@ -148,9 +148,45 @@
   border-radius: 2px;
 }
 
+/* ── Immersion Stats ───────────────────────────────────────────────────────── */
+.immersion-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.immersion-stats h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.immersion-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.immersion-label {
+  width: 110px;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.immersion-value {
+  width: 52px;
+  text-align: right;
+  font-weight: 700;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
 @media (max-width: 640px) {
   .progress-dashboard { padding: 12px; }
   .progress-stats-grid { grid-template-columns: repeat(2, 1fr); }
   .progress-row-label { width: 120px; }
   .calendar-grid { gap: 3px; }
+  .immersion-label { width: 90px; }
 }

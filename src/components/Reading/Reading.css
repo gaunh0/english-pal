@@ -1,0 +1,158 @@
+.reading-view {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reading-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Input ───────────────────────────────────────────────────────────────── */
+.reading-input-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reading-mode-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.reading-url-row {
+  display: flex;
+  gap: 10px;
+}
+.reading-url-row .input { flex: 1; }
+
+/* ── Toolbar ─────────────────────────────────────────────────────────────── */
+.reading-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+}
+
+.reading-stats {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* ── Text area ───────────────────────────────────────────────────────────── */
+.reading-text-area {
+  animation: fadeIn 0.3s ease;
+}
+
+.reading-text {
+  font-size: 17px;
+  line-height: 1.9;
+  color: var(--text);
+  word-wrap: break-word;
+}
+
+.reading-word {
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 0 1px;
+  transition: background var(--transition), color var(--transition);
+}
+
+.reading-word:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+/* ── Popup ───────────────────────────────────────────────────────────────── */
+.reading-popup {
+  position: absolute;
+  z-index: 1000;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 14px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: fadeIn 0.15s ease;
+}
+
+.reading-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.reading-popup-word {
+  font-size: 18px;
+  color: var(--text);
+}
+
+.reading-phonetic {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.reading-popup-meaning {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 0;
+  border-top: 1px solid var(--border);
+}
+
+.reading-pos {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  margin-bottom: 2px;
+}
+
+/* ── Saved words ─────────────────────────────────────────────────────────── */
+.reading-saved {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reading-saved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reading-saved-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reading-saved-term {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.reading-saved-meaning {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 0;
+  border-top: 1px solid var(--border);
+}

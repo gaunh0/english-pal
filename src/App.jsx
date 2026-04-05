@@ -12,6 +12,10 @@ import InterviewQuestions from './components/Questions/InterviewQuestions'
 import ProgressDashboard from './components/Progress/ProgressDashboard'
 import Settings from './components/Settings/Settings'
 import IPALearning from './components/IPA/IPALearning'
+import ShadowingPractice from './components/Shadowing/ShadowingPractice'
+import ReadingPractice from './components/Reading/ReadingPractice'
+import DictationPractice from './components/Dictation/DictationPractice'
+import WritingJournal from './components/Journal/WritingJournal'
 import './App.css'
 
 const VIEWS = {
@@ -24,6 +28,10 @@ const VIEWS = {
   progress:      <ProgressDashboard />,
   settings:      <Settings />,
   ipa:           <IPALearning />,
+  shadowing:     <ShadowingPractice />,
+  reading:       <ReadingPractice />,
+  dictation:     <DictationPractice />,
+  journal:       <WritingJournal />,
 }
 
 export default function App() {
